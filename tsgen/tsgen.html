@@ -1,0 +1,36 @@
+<script type="text/javascript">
+  RED.nodes.registerType( 'timeseries-gen' , {
+      category: 'GatewayKit',
+      color: '#e49292',
+      defaults: {
+          name: { value : "" },
+          interval: { value : "" , required : true , validate : RED.validators.number() },
+          genAmount: { value : "" , required : true , validate : RED.validators.number() }
+      },
+      inputs:0,
+      outputs:1,
+      icon: "inject.png",
+      label: function() {
+          return this.name || "Timeseries Data Generator";
+      }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="timeseries-gen">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-interval"><i class="icon-time"></i> Interval</label>
+    <input type="text" id="node-input-interval" style="width:100px"> ms
+  </div>
+  <div class="form-row">
+    <label for="node-input-genAmount"><i class="icon-cog"></i> Msgs per interval</label>
+    <input type="text" id="node-input-genAmount">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="timeseries-gen">
+    <p>I create stuff.</p>
+</script>
