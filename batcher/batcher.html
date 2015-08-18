@@ -1,0 +1,31 @@
+<script type="text/javascript">
+  RED.nodes.registerType( 'batcher' , {
+      category: 'GatewayKit',
+      color: '#e49292',
+      defaults: {
+          name: { value : "" },
+          batchAmount: { value : "" , required : true , validate : RED.validators.number() }
+      },
+      inputs:1,
+      outputs:1,
+      icon: "debug.png",
+      label: function() {
+          return this.name || "Batcher";
+      }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="batcher">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-batchAmount"><i class="icon-cog"></i> Messages per batch</label>
+    <input type="text" id="node-input-batchAmount">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="batcher">
+    <p>I batch stuff.</p>
+</script>
