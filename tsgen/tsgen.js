@@ -32,7 +32,7 @@ module.exports = function(RED) {
     for( var i = 0; i < this.genAmount; i++ )
     {
       this.send( { payload: {
-        id : 1,
+        id : i + 1,
         tstamp : { $date : now },
         json_data : { value : Math.floor( Math.random() * 100 ) }
       } } );
