@@ -22,5 +22,5 @@
       "flow-sensor" : "flow-sensor/flow-sensor.js",
       "timeseries-gen" : "tsgen/tsgen.js"
     }
-  },
+  }
 }
