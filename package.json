@@ -1,0 +1,26 @@
+{
+  "name": "iot-gateway-kit-misc",
+  "version": "0.1.0",
+  "description": "A collection of miscellaneous Node-RED nodes to be used with IBM's IoT Gateway Kit.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ibm-iot/iot-gateway-kit-misc.git"
+  },
+  "author": "Cristian Traistaru <traistar@us.ibm.com>",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/ibm-iot/iot-gateway-kit-misc/issues"
+  },
+  "homepage": "https://github.com/ibm-iot/iot-gateway-kit-misc",
+  "node-red": {
+    "nodes": {
+      "anomaly" : "anomaly/anomaly.js",
+      "batcher" : "batcher/batcher.js",
+      "flow-sensor" : "flow-sensor/flow-sensor.js",
+      "timeseries-gen" : "tsgen/tsgen.js"
+    }
+  },
+}
