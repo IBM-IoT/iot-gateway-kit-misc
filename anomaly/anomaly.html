@@ -150,4 +150,23 @@
 
 <script type="text/x-red" data-help-name="anomaly">
     <p>Simple anomaly detector</p>
+    <h4><strong>Configuration</strong></h4>
+    <p><strong>Samples</strong> - The number of data samples to record (used for rolling average).</p>
+    <p><strong>Value Field</strong> - The JSON field name that contains the numerical data. Default: <code>msg.payload</code></p>
+    <p><strong>Alert</strong> - How often to generate alerts when a rule is broken</p>
+    <ul>
+      <li><strong>always</strong> - Generate alerts for every rule broken</li>
+      <li><strong>once every...</strong> - Generate an alert at most every <code>x</code> seconds. If a rule is broken in the cooldown period, the alert will never be generated</li>
+    </ul>
+    <p><strong>OK after</strong> - How many seconds to wait after the last alert, before sending an "OK" message, meaning no other rules have been broken.</p>
+    <p><strong>Threshold</strong> - Simple threshold check</p>
+    <ul>
+      <li><strong>Min</strong> - The minimum expected value. If value goes below an alert is generated. Leaving this blank will disable the rule.</li>
+      <li><strong>Max</strong> - The maximum expected value. If value goes above an alert is generated. Leaving this blank will disable the rule.</li>
+    </ul>
+    <p><strong>Average</strong> - Percent deviation from rolling average</p>
+    <ul>
+      <li><strong>Below</strong> - If a value deviates by this % below the rolling average an alert is generated. Leaving this blank will disable the rule.</li>
+      <li><strong>Above</strong> - If a value deviates by this % above the rolling average an alert is generated. Leaving this blank will disable the rule.</li>
+    </ul>
 </script>
