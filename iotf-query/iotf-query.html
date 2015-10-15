@@ -1,0 +1,212 @@
+<script type="text/javascript">
+    RED.nodes.registerType('iotf-auth', {
+        category: 'config',
+        defaults: {
+			name: {value: "", required:true},
+			org: {value: "", required:true},
+            key: {value:"", required:true},
+            token: {value:"", required:true}
+        },
+        label: function() {
+            return this.name;
+        }
+    });
+	
+</script>
+
+<script type="text/x-red" data-template-name="iotf-auth">
+	<div class="form-row">
+		<label for="node-config-input-name">Name</label>
+		<input type="text" id="node-config-input-name">
+	</div>
+	<div class="form-row">
+        <label for="node-config-input-org">Organization</label>
+        <input type="text" id="node-config-input-org" onchange="onEditPrepare()">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-key">API Key</label>
+        <input type="text" id="node-config-input-key">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-token">Auth Token</label>
+        <input type="password" id="node-config-input-token">
+    </div>
+</script>
+
+<script type="text/javascript">
+		var previousId = null;
+		var previousName = null;
+		var previousKey = null;
+		var previousToken = null;
+		var previousOrg = null;
+		var configNode = null;
+		var previousSelectedType = null;
+		var previousSelectedId
+	
+		RED.nodes.registerType('iotf-query', {
+			category: 'GatewayKit',
+			color: '#66FFFF',
+			defaults: {
+				name: {value:""},
+				auth: {value: "", type:"iotf-auth"},
+				devtype: {value: "All"},
+				devid: {value: "all"},
+				evttype: {value: ""}
+			},
+			inputs: 1,
+			outputs: 1,
+			align: "right",
+			label: function() {
+				return this.name||"IoTF Query";
+			},
+			
+			oneditprepare : onEditPrepare
+		});
+		
+		function onEditPrepare() {
+			removeAllSelects();
+			var devType = document.getElementById('node-input-devtype');
+			var devId = document.getElementById('node-input-devid');
+			var id = document.getElementById('node-input-auth').value;
+			configNode = RED.nodes.node(id);
+			if( requiredFilled() ) {
+				previousServerID = id;
+				previousKey = configNode.key;
+				previousToken = configNode.token;
+				previousOrg = configNode.org;
+				var url = '/devices';
+				queryIotf(url, function(output) {
+					var options = [];
+					for(var x = 0; x < output.length; x++) {
+						if($.inArray(output[x].type, options) == -1) {
+							options.push(output[x].type);
+							addSelect(devType, options);
+							devType.selectedIndex = previousSelectedType;
+							devType.onchange();
+						}
+					}
+				});
+			}			
+		}
+		
+		function removeAllSelects() {
+			removeTypes();
+			removeIds();
+		}
+		
+		function removeTypes() {
+			var devType = document.getElementById('node-input-devtype');
+			for( var x = devType.length - 1; x > 0; x--) {
+				devType.remove(x);
+			}
+		}
+		
+		function removeIds() {
+			var devId = document.getElementById('node-input-devid');
+			for( var x = devId.length - 1; x > 0; x--) {
+				devId.remove(x);
+			}
+		}
+		
+		function addSelect(selectBox, array) {
+			for(var x = 0; x < array.length; x++) {
+				var option = document.createElement("option");
+				option.text = array[x];
+				option.value = array[x];
+				option.id = selectBox.id + '-' + array[x];
+				selectBox.add(option);
+			}
+		}
+		
+		function devChange(type) {
+			var index = document.getElementById('node-input-devtype').selectedIndex;
+			if(index != -1) {
+				previousSelectedType = index;
+			}
+			
+			var val = type.value;
+			var url = '/devices/' + val;
+			var devId = document.getElementById('node-input-devid');
+			removeIds();
+			if(val && val != "all") {
+				queryIotf( url, function(output) {
+					var options = [];
+					for(var x = 0; x < output.length; x++) {
+						if($.inArray(output[x].id, options) == -1) {
+							options.push(output[x].id);
+						}
+					}
+					addSelect(devId, options);
+					devId.selectedIndex = previousSelectedId;
+				});
+			}
+		}
+		
+		function devIdChange() {
+			var index = document.getElementById('node-input-devid').selectedIndex;
+			if(index != -1) {
+				previousSelectedId = index;
+			}
+		}
+		
+		function queryIotf(url, handleData) {
+			$.ajax({
+				type: "GET",
+				url: url,
+				success: function(data) {
+					handleData(data);
+				}
+			});
+		}
+
+		function requiredFilled() {
+		if(configNode) {
+			var key = configNode.key;
+			var token = configNode.token;
+			var org = configNode.org;
+			
+			if( key != "" && token != "" && org != "" ) {
+				return true;
+			}
+			else {
+				return false;
+			}	
+		}
+		else {
+			return false;
+		}
+	}
+</script>
+
+<script type="text/x-red" data-template-name="iotf-query">
+		<div class="form-row">
+			<label for="node-input-name">Name</label>
+			<input type="text" id="node-input-name" placeholder="Name">
+		</div>
+		<div class="form-row">
+			<label for="node-input-auth">Authorization</label>
+			<input type="text" id="node-input-auth">
+		</div>
+		<div class="form-row" style="width: 450px">
+			<label for="node-input-devtype">Device Type</label>
+			<select id="node-input-devtype" onchange="devChange(this)">
+				<option value="all">All</option>
+			</select>
+		</div>
+		<div class="form-row" id="node-input-devid-div">
+			<label for="node-input-devid">Device Id</label>
+			<select id="node-input-devid" onchange="devIdChange()">
+				<option value="all">All</option>
+			</select>
+		</div>
+		<div class="form-row">
+			<label for="node-input-evttype">Event Type</label>
+			<input type="text" id="node-input-evttype" placeholder="Optional">
+		</div>
+</script>
+
+<script type="text/x-red" data-help-name="iotf-query">
+	<p>This node will pull in historical data from the Internet of Things Foundation.  All fields marked with an * are 
+	required fields.  If only the required fields are filled out this node will pull down all the historical data associated 
+	with the specified organization.  Optionally you can narrow this down to device types, and further to specific IDs.</p>
+</script>
