@@ -21,7 +21,8 @@
       "batcher" : "batcher/batcher.js",
       "flow-sensor" : "flow-sensor/flow-sensor.js",
       "timeseries-gen" : "tsgen/tsgen.js",
-	  "iotf-query" : "iotf-query/iotf-query.js"
+	  "iotf-query" : "iotf-query/iotf-query.js",
+	"zwave" : "zwave/zwave.js"
     }
   }
 }
